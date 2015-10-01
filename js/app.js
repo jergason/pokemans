@@ -10,18 +10,19 @@ function startApp(pokemans) {
                                 loadPokemans,
                                 promisify(getMatchingPokemans(pokemans)))
 
+
   let button = document.querySelector('.find-pokemans')
   let pokemanInput = document.querySelector('input.pokeman')
   button.addEventListener('click', function(event) {
     event.preventDefault()
     let pokemanName = pokemanInput.value
+    renderLoadingSpinner()
     loadAndRender(pokemanName)
   })
 }
 
-function renderLoadingSpinner(input) {
+function renderLoadingSpinner() {
   renderToDOM('div.pokemans', '<div class="row"><img src="spinner.gif" /></div>')
-  return input
 }
 
 var getMatchingPokemans = curry(function(_pokemans, pokemanName) {
