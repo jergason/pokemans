@@ -1,5 +1,3 @@
-// @flow
-
 import {property, isEmpty, curry, compose, filter, get, map} from 'lodash-fp'
 import {composeP} from 'ramda'
 import {getPokemans, loadPokemans} from './load-pokemans'
@@ -8,18 +6,27 @@ import {promisify} from './utils'
 getPokemans().then(startApp)
 
 function startApp(pokemans) {
+   let loadAndRender = composeP(renderPokemans,
+                                loadPokemans,
+                                promisify(getMatchingPokemans(pokemans)))
+
   let button = document.querySelector('.find-pokemans')
   let pokemanInput = document.querySelector('input.pokeman')
   button.addEventListener('click', function(event) {
     event.preventDefault()
     let pokemanName = pokemanInput.value
-    composeP(renderPokemans, loadPokemans, promisify(getMatchingPokemans(pokemans)))(pokemanName)
+    loadAndRender(pokemanName)
   })
 }
 
+function renderLoadingSpinner(input) {
+  renderToDOM('div.pokemans', '<div class="row"><img src="spinner.gif" /></div>')
+  return input
+}
 
 var getMatchingPokemans = curry(function(_pokemans, pokemanName) {
   let filterByName = compose(not, isEmpty, match(new RegExp(pokemanName.toLowerCase(), 'i')), property('name'))
+
   return filter(filterByName, _pokemans)
 })
 
@@ -60,9 +67,9 @@ var match = curry(function(regexp, str) {
   return res ? res : []
 })
 
-var renderToDOM = curry(function(selector, string) {
+var renderToDOM = curry(function(selector, res) {
   let node = document.querySelector(selector)
-  node.innerHTML = string
+  node.innerHTML = res
 })
 
 var renderPokemans = compose(renderToDOM('div.pokemans'), map(renderPokeman))

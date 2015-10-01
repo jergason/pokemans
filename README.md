@@ -1,12 +1,9 @@
 # Pokemans - gotta grab the mostly
 
 This is a small demo app to show off some functional programming principles
-in JS.
+in JS. I don't claim it is good code, just interesting code.
 
 It uses the [pokeapi](http://pokeapi.co) for data.
-
-This is for demo purposes only. If you build real apps like this you will be
-sad, but there are some core ideas to notice.
 
 
 ## Installation

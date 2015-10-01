@@ -1,5 +1,3 @@
-// @flow
-
 import axios from 'axios'
 import Bluebird from 'bluebird'
 
@@ -12,7 +10,7 @@ export function getPokemans() {
   return getJSON('api/v1/pokedex/1/').then(res => res.pokemon)
 }
 
-export function loadPokemans(pokemans: Array<Object>): Promise<Array<Object>> {
+export function loadPokemans(pokemans) {
   return Bluebird.map(pokemans, pokeman => getPokeman(pokeman.resource_uri))
 }
 
@@ -38,7 +36,8 @@ function hydrateDescription(pokeman) {
   if (!pokeman.descriptions || pokeman.descriptions.length == 0) {
     return Bluebird.resolve(pokeman)
   }
-  return getJSON(pokeman.descriptions[0].resource_uri).then(description => extend(pokeman, {description: description.description}))
+  return getJSON(pokeman.descriptions[0].resource_uri)
+    .then(description => extend(pokeman, {description: description.description}))
 }
 
 let checkCache = curry(function(cache, uri) {
